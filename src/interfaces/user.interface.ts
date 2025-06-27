@@ -9,11 +9,11 @@ export interface UserInterface {
   createdAt: Date;
   updatedAt: Date;
 
-  username?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  phone?: string | null;
-  photoUrl?: string | null;
-  dateOfBirth?: Date | null;
-  country?: string | null;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  photoUrl: string | null;
+  dateOfBirth: Date | null;
+  country: string | null;
 }

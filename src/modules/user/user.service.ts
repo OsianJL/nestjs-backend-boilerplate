@@ -19,4 +19,23 @@ export class UserService {
   async findByEmail(email: string): Promise<UserInterface | null> {
     return this.userRepo.findByEmail(email);
   }
+
+  async getAllUsers(): Promise<UserInterface[]> {
+    return this.userRepo.findAll();
+  }
+
+  async getUserById(id: string): Promise<UserInterface | null> {
+    return this.userRepo.findById(id);
+  }
+
+  async updateUser(
+    id: string,
+    data: Partial<UserInterface>,
+  ): Promise<UserInterface> {
+    return this.userRepo.update(id, data);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.userRepo.delete(id);
+  }
 }
