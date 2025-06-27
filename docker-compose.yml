@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nestjs_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: nest_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "54322:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  nestjs:
+    build: .
+    container_name: nestjs_app
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/nest_db
+    volumes:
+      - .:/app
+    command: npm run start:dev
+
+volumes:
+  pgdata:
