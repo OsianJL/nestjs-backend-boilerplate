@@ -14,7 +14,8 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { UserInterface } from 'src/shared/interfaces/user.interface';
+import type { AuthRequest } from 'src/shared/interfaces/auth-request.interface';
+import type { UserInterface } from 'src/shared/interfaces/user.interface';
 import {
   ApiTags,
   ApiCreatedResponse,
@@ -24,7 +25,6 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AuthRequest } from 'src/shared/interfaces/auth-request.interface';
 
 @ApiTags('users')
 @Controller('users')
