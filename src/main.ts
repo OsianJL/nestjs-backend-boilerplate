@@ -11,6 +11,16 @@ async function bootstrap() {
     .setTitle('NestJS Backend Boilerplate')
     .setDescription('API for user registration and authentication')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'jwt',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
