@@ -23,7 +23,7 @@
     "typecheck": "tsc --noEmit",
     "check:coverage": "node scripts/check-coverage.js",
     "prepare": "husky",
-    "precommit-check": "npm test"
+    "precommit-check": "npm run typecheck && npm test"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
