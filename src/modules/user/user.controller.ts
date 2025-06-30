@@ -30,7 +30,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  //create user
   @Post()
   @ApiOperation({ summary: 'Create new user' })
   @ApiCreatedResponse({ description: 'User created successfully' })
@@ -45,7 +45,7 @@ export class UserController {
       throw new BadRequestException('User could not be created');
     }
   }
-
+  //get all users
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all users (protected)' })

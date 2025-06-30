@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiUnauthorizedResponse,
+  ApiBody,
 } from '@nestjs/swagger';
 
 @ApiTags('auth')
@@ -14,6 +15,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiBody({ type: LoginDto })
   @ApiOperation({ summary: 'Login and return access token' })
   @ApiOkResponse({ description: 'JWT access token returned' })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
