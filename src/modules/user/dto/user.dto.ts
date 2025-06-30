@@ -5,11 +5,7 @@ import {
   MinLength,
   IsIn,
 } from 'class-validator';
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  PartialType,
-} from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import 'reflect-metadata';
 
 export class CreateUserDto {

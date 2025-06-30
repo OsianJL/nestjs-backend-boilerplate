@@ -5,6 +5,7 @@ A boilerplate for building scalable, production-ready backend applications with 
 ---
 
 ## Features
+
 - NestJS 11
 - PostgreSQL with Prisma ORM
 - Authentication & user management
@@ -16,6 +17,7 @@ A boilerplate for building scalable, production-ready backend applications with 
 ## Getting Started
 
 ### 1. Clone the repository
+
 ```bash
 git clone <your-repo-url>
 cd nestjs-backend-boilerplate
@@ -30,7 +32,7 @@ DATABASE_URL=postgres://<user>:<password>@<host>:<port>/<db>
 ```
 
 > **Note:** Each developer should use their own values according to their local or remote database setup. The default Docker Compose setup uses:
-> 
+>
 > `postgres://postgres:postgrespassword@localhost:54322/nest_db`
 
 ---
@@ -61,6 +63,7 @@ npx prisma migrate deploy
 ```
 
 If you need to generate the Prisma client after changing the schema:
+
 ```bash
 npx prisma generate
 ```
@@ -72,11 +75,13 @@ npx prisma generate
 There are scripts to seed the database with test users and to reset the user table:
 
 - **Seed:**
+
   ```bash
   npm run seed
   # or
   npx ts-node prisma/scripts/seed.ts
   ```
+
   This will create an admin user and several test users.
 
 - **Reset:**
@@ -119,6 +124,7 @@ Swagger UI is available at [http://localhost:3000/api](http://localhost:3000/api
 ---
 
 ## Notes
+
 - Make sure your `.env` file is not committed to version control.
 - You can customize the database, ports, and credentials in `docker-compose.yml` and your `.env` file.
 - For more advanced Prisma usage, see the [Prisma docs](https://www.prisma.io/docs/).

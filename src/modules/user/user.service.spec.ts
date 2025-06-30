@@ -38,7 +38,7 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    it('should hash password and call userRepo.create()', async () => {
+    it('should hash password and call userRepo.create()', async function (this: void) {
       const dto: CreateUserDto = {
         email: 'test@example.com',
         password: 'plaintext',
@@ -61,14 +61,14 @@ describe('UserService', () => {
         dateOfBirth: null,
         country: null,
       };
-
-      userRepo.create.mockResolvedValue(mockUser);
+      userRepo.create.mockResolvedValueOnce(mockUser);
 
       const result = await service.createUser(dto);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(userRepo.create).toHaveBeenCalledWith({
         ...dto,
-        password: expect.any(String),
+        password: expect.any(String) as string,
       });
 
       expect(result).toEqual(mockUser);
