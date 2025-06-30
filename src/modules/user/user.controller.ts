@@ -45,7 +45,7 @@ export class UserController {
       throw new BadRequestException('User could not be created');
     }
   }
-
+  //get all users
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all users (protected)' })
