@@ -72,9 +72,7 @@ describe('AuthService', () => {
 
       const token = await service.validateUser(loginDto);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(userService.findByEmail).toHaveBeenCalledWith(loginDto.email);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: mockUser.id,
         email: mockUser.email,
