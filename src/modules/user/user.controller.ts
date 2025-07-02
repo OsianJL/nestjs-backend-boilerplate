@@ -48,10 +48,13 @@ export class UserController {
   //get all users
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get all users (protected)' })
+  @ApiBearerAuth('jwt')
+  @ApiOperation({ summary: 'Get all users (admin only)' })
   @ApiOkResponse({ description: 'List of all users' })
   async findAll(@Req() req: AuthRequest): Promise<UserInterface[]> {
-    console.log('Authenticated user:', req.user);
+    if (!req.user.isAdmin) {
+      throw new ForbiddenException('Admin only');
+    }
     return this.userService.getAllUsers();
   }
 

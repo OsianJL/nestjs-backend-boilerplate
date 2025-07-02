@@ -23,6 +23,7 @@ describe('UserRepository', () => {
     receiveNotifications: true,
     showEmail: false,
     userId: 'uuid-123',
+    userName: null,
   };
 
   const mockUser: User & { userProfile: UserProfile } = {

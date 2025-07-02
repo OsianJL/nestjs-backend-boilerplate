@@ -1,5 +1,6 @@
 model UserProfile {
   id          String   @id @default(uuid())
+  userName    String?
   firstName   String?
   lastName    String?
   photoUrl    String?
