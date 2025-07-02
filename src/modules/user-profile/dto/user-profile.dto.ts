@@ -5,6 +5,11 @@ export class UserProfileDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  userName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   firstName?: string;
 
   @ApiPropertyOptional()

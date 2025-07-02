@@ -1,5 +1,6 @@
 export interface UserProfileInterface {
   id: string;
+  userName?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   photoUrl?: string | null;

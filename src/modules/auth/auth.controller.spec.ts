@@ -43,7 +43,6 @@ describe('AuthController', () => {
 
       const result = await controller.login(loginDto);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(authService.validateUser).toHaveBeenCalledWith(loginDto);
       expect(result).toEqual({ accessToken: 'mocked.jwt.token' });
     });

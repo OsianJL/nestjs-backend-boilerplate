@@ -21,6 +21,7 @@ async function main() {
       isVerified: true,
       userProfile: {
         create: {
+          userName: 'admin',
           firstName: 'Admin',
           lastName: 'User',
           phone: '123456789',
@@ -46,6 +47,7 @@ async function main() {
         isVerified: i % 2 === 0, // Algunos usuarios verificados y otros no
         userProfile: {
           create: {
+            userName: `user${i}`,
             firstName: `User${i}`,
             lastName: `Test${i}`,
             phone: `555000${i}`,
@@ -71,6 +73,7 @@ async function main() {
       isVerified: true,
       userProfile: {
         create: {
+          userName: 'moderator',
           firstName: 'Moderator',
           lastName: 'User',
           phone: '987654321',
