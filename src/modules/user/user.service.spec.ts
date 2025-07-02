@@ -49,23 +49,21 @@ describe('UserService', () => {
         id: 'uuid-123',
         email: dto.email,
         password: hashed,
-        username: null,
-        isAdmin: false,
         provider: 'EMAIL',
+        isAdmin: false,
+        isActive: true,
+        isVerified: false,
+        userRole: 'user',
+        lastLogin: null,
+        resetToken: null,
+        resetTokenExpiry: null,
         createdAt: new Date(),
         updatedAt: new Date(),
-        firstName: null,
-        lastName: null,
-        phone: null,
-        photoUrl: null,
-        dateOfBirth: null,
-        country: null,
       };
       userRepo.create.mockResolvedValueOnce(mockUser);
 
       const result = await service.createUser(dto);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(userRepo.create).toHaveBeenCalledWith({
         ...dto,
         password: expect.any(String) as string,

@@ -3,37 +3,54 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserRepository } from './user.repository';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { User } from '@prisma/client';
+import { User, UserProfile } from '@prisma/client';
 
 describe('UserRepository', () => {
   let repository: UserRepository;
   let prisma: jest.Mocked<PrismaService>;
 
-  const mockUser: User = {
+  const mockUserProfile: UserProfile = {
+    id: 'profile-uuid-123',
+    firstName: null,
+    lastName: null,
+    photoUrl: null,
+    phone: null,
+    country: null,
+    dateOfBirth: null,
+    language: null,
+    timezone: null,
+    bio: null,
+    receiveNotifications: true,
+    showEmail: false,
+    userId: 'uuid-123',
+  };
+
+  const mockUser: User & { userProfile: UserProfile } = {
     id: 'uuid-123',
     email: 'test@example.com',
     password: 'hashedPassword',
-    username: 'testuser',
     isAdmin: false,
     provider: 'EMAIL',
+    isActive: true,
+    isVerified: false,
+    userRole: 'user',
+    lastLogin: null,
+    resetToken: null,
+    resetTokenExpiry: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-    firstName: null,
-    lastName: null,
-    phone: null,
-    photoUrl: null,
-    dateOfBirth: null,
-    country: null,
+    userProfile: mockUserProfile,
   };
 
   beforeEach(async () => {
     const mockPrismaService = {
       user: {
-        create: jest.fn(),
-        findUnique: jest.fn(),
-        findMany: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
+        create: jest.fn().mockResolvedValue(mockUser),
+        findUnique: jest.fn().mockResolvedValue(mockUser),
+        findMany: jest.fn().mockResolvedValue([mockUser]),
+        update: jest.fn().mockResolvedValue(mockUser),
+        delete: jest.fn().mockResolvedValue(undefined),
+        findFirst: jest.fn().mockResolvedValue(mockUser),
       },
     } as unknown as jest.Mocked<PrismaService>;
 
@@ -56,12 +73,9 @@ describe('UserRepository', () => {
   });
 
   describe('findByEmail', () => {
-    it('should call prisma.user.findUnique with email', async function (this: void) {
-      (prisma.user.findUnique as jest.Mock).mockResolvedValueOnce(mockUser);
-
+    it('should call prisma.user.findUnique with email', async () => {
       const result = await repository.findByEmail(mockUser.email);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { email: mockUser.email },
       });
@@ -70,37 +84,88 @@ describe('UserRepository', () => {
   });
 
   describe('create', () => {
-    it('should call prisma.user.create with user data', async function (this: void) {
-      (prisma.user.create as jest.Mock).mockResolvedValueOnce(mockUser);
-
+    it('should create a user with an empty profile when no profile is provided', async () => {
       const result = await repository.create({
         email: mockUser.email,
         password: mockUser.password,
-        username: mockUser.username ?? undefined,
-        provider: mockUser.provider,
       });
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.user.create).toHaveBeenCalledWith({
         data: {
           email: mockUser.email,
           password: mockUser.password,
-          username: mockUser.username ?? undefined,
-          provider: mockUser.provider,
+          provider: 'EMAIL',
+          isAdmin: false,
+          isActive: true,
+          isVerified: false,
+          userRole: 'user',
+          userProfile: {
+            create: {
+              receiveNotifications: true,
+              showEmail: false,
+            },
+          },
+        },
+        include: {
+          userProfile: true,
         },
       });
 
       expect(result).toEqual(mockUser);
     });
+
+    it('should create a user with provided profile data', async () => {
+      const userWithCustomProfile = {
+        ...mockUser,
+        userProfile: {
+          ...mockUserProfile,
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      };
+
+      (prisma.user.create as jest.Mock).mockResolvedValueOnce(
+        userWithCustomProfile,
+      );
+
+      const result = await repository.create({
+        email: mockUser.email,
+        password: mockUser.password,
+        userProfile: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      });
+
+      expect(prisma.user.create).toHaveBeenCalledWith({
+        data: {
+          email: mockUser.email,
+          password: mockUser.password,
+          provider: 'EMAIL',
+          isAdmin: false,
+          isActive: true,
+          isVerified: false,
+          userRole: 'user',
+          userProfile: {
+            create: {
+              firstName: 'John',
+              lastName: 'Doe',
+            },
+          },
+        },
+        include: {
+          userProfile: true,
+        },
+      });
+
+      expect(result).toEqual(userWithCustomProfile);
+    });
   });
 
   describe('findById', () => {
-    it('should find a user by id', async function (this: void) {
-      (prisma.user.findUnique as jest.Mock).mockResolvedValueOnce(mockUser);
-
+    it('should find a user by id', async () => {
       const result = await repository.findById(mockUser.id);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: mockUser.id },
       });
@@ -109,43 +174,62 @@ describe('UserRepository', () => {
   });
 
   describe('findAll', () => {
-    it('should return a list of users', async function (this: void) {
-      (prisma.user.findMany as jest.Mock).mockResolvedValueOnce([mockUser]);
-
+    it('should return a list of users', async () => {
       const result = await repository.findAll();
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.user.findMany).toHaveBeenCalled();
       expect(result).toEqual([mockUser]);
     });
   });
 
   describe('update', () => {
-    it('should call prisma.user.update with correct data', async function (this: void) {
-      (prisma.user.update as jest.Mock).mockResolvedValueOnce(mockUser);
-
+    it('should call prisma.user.update with correct data', async () => {
       const result = await repository.update(mockUser.id, {
-        username: 'updated',
+        userRole: 'admin',
       });
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: mockUser.id },
-        data: { username: 'updated' },
+        data: {
+          userRole: 'admin',
+          userProfile: undefined,
+        },
       });
       expect(result).toEqual(mockUser);
     });
   });
 
   describe('delete', () => {
-    it('should call prisma.user.delete with id', async function (this: void) {
-      (prisma.user.delete as jest.Mock).mockResolvedValueOnce(undefined);
-
+    it('should call prisma.user.delete with id', async () => {
       await expect(repository.delete(mockUser.id)).resolves.toBeUndefined();
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.user.delete).toHaveBeenCalledWith({
         where: { id: mockUser.id },
+      });
+    });
+  });
+
+  describe('findByResetToken', () => {
+    it('should find a user by reset token', async () => {
+      const result = await repository.findByResetToken('token123');
+
+      expect(prisma.user.findFirst).toHaveBeenCalledWith({
+        where: {
+          resetToken: 'token123',
+          resetTokenExpiry: { gt: expect.any(Date) as Date },
+        },
+      });
+      expect(result).toEqual(mockUser);
+    });
+  });
+
+  describe('touchLastLogin', () => {
+    it('should update lastLogin timestamp', async () => {
+      await repository.touchLastLogin(mockUser.id);
+
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: mockUser.id },
+        data: { lastLogin: expect.any(Date) as Date },
       });
     });
   });

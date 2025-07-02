@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from 'src/modules/user/repositories/user.repository';
 import { UserInterface } from 'src/shared/interfaces/user.interface';
-import { CreateUserDto } from 'src/modules/user/dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from 'src/modules/user/dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -28,10 +28,7 @@ export class UserService {
     return this.userRepo.findById(id);
   }
 
-  async updateUser(
-    id: string,
-    data: Partial<UserInterface>,
-  ): Promise<UserInterface> {
+  async updateUser(id: string, data: UpdateUserDto): Promise<UserInterface> {
     return this.userRepo.update(id, data);
   }
 
