@@ -26,5 +26,5 @@
       "src/*": ["src/*"]
     }
   },
-  "include": ["src/**/*", "test/**/*", "*.mjs"]
+  "include": ["src/**/*", "test/**/*", "*.mjs", "*.config.ts"]
 }
