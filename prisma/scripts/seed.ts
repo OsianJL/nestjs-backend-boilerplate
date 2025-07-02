@@ -10,26 +10,80 @@ async function main() {
 
   const password = await bcrypt.hash('adminpass', 10);
 
+  // Crea usuario admin con perfil
   await prisma.user.create({
     data: {
       email: 'admin@example.com',
       password,
       isAdmin: true,
-      username: 'admin',
       provider: 'EMAIL',
+      userRole: 'admin',
+      isVerified: true,
+      userProfile: {
+        create: {
+          firstName: 'Admin',
+          lastName: 'User',
+          phone: '123456789',
+          country: 'Adminland',
+          language: 'es',
+          timezone: 'UTC',
+          bio: 'Administrador principal',
+          receiveNotifications: true,
+          showEmail: true,
+        },
+      },
     },
   });
 
+  // Crea 5 usuarios normales con perfil
   for (let i = 1; i <= 5; i++) {
     await prisma.user.create({
       data: {
         email: `user${i}@example.com`,
         password: await bcrypt.hash(`userpass${i}`, 10),
-        username: `user${i}`,
         provider: 'EMAIL',
+        userRole: 'user',
+        isVerified: i % 2 === 0, // Algunos usuarios verificados y otros no
+        userProfile: {
+          create: {
+            firstName: `User${i}`,
+            lastName: `Test${i}`,
+            phone: `555000${i}`,
+            country: 'Testland',
+            language: 'es',
+            timezone: 'UTC+1',
+            bio: `Usuario de prueba ${i}`,
+            receiveNotifications: true,
+            showEmail: false,
+          },
+        },
       },
     });
   }
+
+  // Crea un moderador
+  await prisma.user.create({
+    data: {
+      email: 'moderator@example.com',
+      password: await bcrypt.hash('moderatorpass', 10),
+      provider: 'EMAIL',
+      userRole: 'moderator',
+      isVerified: true,
+      userProfile: {
+        create: {
+          firstName: 'Moderator',
+          lastName: 'User',
+          phone: '987654321',
+          country: 'Modland',
+          language: 'es',
+          timezone: 'UTC',
+          bio: 'Moderador del sistema',
+          receiveNotifications: true,
+          showEmail: true,
+        },
+      },
+    },
+  });
 
   console.log('✅ Done!');
 }

@@ -50,17 +50,16 @@ describe('AuthService', () => {
       id: 'uuid-123',
       email: loginDto.email,
       password: '', // hashed version to be set in test
-      username: 'testuser',
       isAdmin: false,
+      isActive: true,
+      isVerified: false,
+      userRole: 'user',
       provider: 'EMAIL',
+      lastLogin: null,
+      resetToken: null,
+      resetTokenExpiry: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      firstName: null,
-      lastName: null,
-      phone: null,
-      photoUrl: null,
-      dateOfBirth: null,
-      country: null,
     };
 
     it('should return a JWT token if credentials are valid', async function (this: void) {

@@ -1,0 +1,11 @@
+enum Provider {
+  EMAIL
+  GOOGLE
+  APPLE
+}
+
+enum UserRole {
+  user
+  admin
+  moderator
+} 
