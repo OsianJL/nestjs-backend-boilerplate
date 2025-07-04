@@ -2,7 +2,6 @@ import {
   IsEmail,
   IsOptional,
   IsString,
-  MinLength,
   IsBoolean,
   IsIn,
   ValidateNested,
@@ -11,8 +10,9 @@ import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import 'reflect-metadata';
 import { UserRole } from '@prisma/client';
+import { IsStrongPassword } from 'src/common/decorators/password.decorator';
 
-// DTO mínimo del perfil para anidarlo desde User
+// Minimum profile DTO to nest within User
 export class UserProfileDto {
   @ApiPropertyOptional({ example: 'Ada' })
   @IsOptional()
@@ -45,8 +45,12 @@ export class CreateUserDto {
   @IsEmail()
   email!: string;
 
-  @ApiProperty({ example: 'securepassword' })
-  @MinLength(6)
+  @ApiProperty({
+    example: 'SecureP@ss123',
+    description:
+      'The password must have at least 8 characters, including uppercase, lowercase, numbers, and special characters',
+  })
+  @IsStrongPassword()
   password!: string;
 
   @ApiPropertyOptional({ enum: ['EMAIL', 'GOOGLE', 'APPLE'] })
