@@ -19,7 +19,7 @@ A boilerplate for building scalable, production-ready backend applications with 
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/OsianJL/nestjs-backend-boilerplate
 cd nestjs-backend-boilerplate
 ```
 
